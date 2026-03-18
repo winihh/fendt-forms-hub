@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterBar } from "@/components/formulare/FilterBar";
 import { DocumentTable, type SortField, type SortDirection } from "@/components/formulare/DocumentTable";
@@ -7,6 +7,8 @@ import { NewDocumentWizard } from "@/components/formulare/NewDocumentWizard";
 import { DeleteConfirmDialog } from "@/components/formulare/DeleteConfirmDialog";
 import { MOCK_DOCUMENTS, type FormularDocument, type FormularStatus, type FormularType } from "@/data/formular-types";
 import { toast } from "sonner";
+
+const PAGE_SIZE = 20;
 
 export default function FormularePage() {
   const [documents, setDocuments] = useState<FormularDocument[]>(MOCK_DOCUMENTS);
