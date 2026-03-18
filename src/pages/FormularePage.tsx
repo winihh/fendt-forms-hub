@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { FilterBar } from "@/components/formulare/FilterBar";
 import { DocumentTable, type SortField, type SortDirection } from "@/components/formulare/DocumentTable";
 import { NewDocumentWizard } from "@/components/formulare/NewDocumentWizard";
+import { DeleteConfirmDialog } from "@/components/formulare/DeleteConfirmDialog";
 import { MOCK_DOCUMENTS, type FormularDocument, type FormularStatus, type FormularType } from "@/data/formular-types";
 import { toast } from "sonner";
 
 export default function FormularePage() {
-  const [documents] = useState<FormularDocument[]>(MOCK_DOCUMENTS);
+  const [documents, setDocuments] = useState<FormularDocument[]>(MOCK_DOCUMENTS);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<FormularDocument | null>(null);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -85,6 +87,13 @@ export default function FormularePage() {
     toast.info(`${action}: ${doc.id}`);
   };
 
+  const handleDeleteConfirm = () => {
+    if (!deleteTarget) return;
+    setDocuments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
+    toast.success(`Dokument ${deleteTarget.id} wurde gelöscht.`);
+    setDeleteTarget(null);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Page header */}
@@ -129,7 +138,7 @@ export default function FormularePage() {
             onEdit={(doc) => handleAction("Bearbeiten", doc)}
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
-            onDelete={(doc) => handleAction("Löschen", doc)}
+            onDelete={(doc) => setDeleteTarget(doc)}
             onPrint={(doc) => handleAction("Drucken", doc)}
           />
         </div>
@@ -142,6 +151,13 @@ export default function FormularePage() {
         onCreated={() => {
           toast.success("Dokument erfolgreich erzeugt. Übergabe an Signotec…");
         }}
+      />
+
+      {/* Delete confirmation */}
+      <DeleteConfirmDialog
+        document={deleteTarget}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteTarget(null)}
       />
     </div>
   );
