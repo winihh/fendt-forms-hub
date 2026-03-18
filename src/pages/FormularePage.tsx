@@ -144,16 +144,56 @@ export default function FormularePage() {
         {/* Table */}
         <div className="mt-4">
           <DocumentTable
-            documents={filteredDocuments}
+            documents={paginatedDocuments}
             sortField={sortField}
             sortDirection={sortDirection}
-            onSort={handleSort}
+            onSort={(field) => { handleSort(field); setCurrentPage(1); }}
             onEdit={(doc) => handleAction("Bearbeiten", doc)}
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
             onDelete={(doc) => setDeleteTarget(doc)}
             onPrint={(doc) => handleAction("Drucken", doc)}
           />
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+              <span>
+                {(safeCurrentPage - 1) * PAGE_SIZE + 1}–{Math.min(safeCurrentPage * PAGE_SIZE, filteredDocuments.length)} von {filteredDocuments.length}
+              </span>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={safeCurrentPage <= 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Zurück
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={page === safeCurrentPage ? "default" : "outline"}
+                    size="sm"
+                    className="w-8 h-8 p-0"
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={safeCurrentPage >= totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  Weiter
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
