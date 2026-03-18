@@ -33,6 +33,7 @@ export default function FormularePage() {
     setTypeFilter("all");
     setStatusFilter("all");
     setShowReleased(false);
+    setCurrentPage(1);
   };
 
   const handleSort = (field: SortField) => {
