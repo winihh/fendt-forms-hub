@@ -190,7 +190,7 @@ export function DocumentTable({
                 <td className="px-4 py-2">
                   <span className="text-sm font-medium">{TYPE_LABELS[doc.type]}</span>
                   {doc.type === "inspection" && doc.inspectionNr && (
-                    <span className="ml-2 text-xs text-muted-foreground">Nr. {doc.inspectionNr}</span>
+                    <span className="ml-1 text-xs text-muted-foreground">({doc.inspectionNr})</span>
                   )}
                 </td>
                 <td className="px-4 py-2 text-sm font-mono tabular-nums">{doc.vin}</td>
