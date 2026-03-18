@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterBar } from "@/components/formulare/FilterBar";
 import { DocumentTable, type SortField, type SortDirection } from "@/components/formulare/DocumentTable";
@@ -7,6 +7,8 @@ import { NewDocumentWizard } from "@/components/formulare/NewDocumentWizard";
 import { DeleteConfirmDialog } from "@/components/formulare/DeleteConfirmDialog";
 import { MOCK_DOCUMENTS, type FormularDocument, type FormularStatus, type FormularType } from "@/data/formular-types";
 import { toast } from "sonner";
+
+const PAGE_SIZE = 20;
 
 export default function FormularePage() {
   const [documents, setDocuments] = useState<FormularDocument[]>(MOCK_DOCUMENTS);
@@ -22,6 +24,7 @@ export default function FormularePage() {
   // Sort
   const [sortField, setSortField] = useState<SortField>("lastModified");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const hasActiveFilters = searchQuery !== "" || typeFilter !== "all" || statusFilter !== "all" || showReleased;
 
@@ -30,6 +33,7 @@ export default function FormularePage() {
     setTypeFilter("all");
     setStatusFilter("all");
     setShowReleased(false);
+    setCurrentPage(1);
   };
 
   const handleSort = (field: SortField) => {
@@ -83,6 +87,14 @@ export default function FormularePage() {
     return docs;
   }, [documents, searchQuery, typeFilter, statusFilter, showReleased, sortField, sortDirection]);
 
+  // Reset page when filters change
+  const totalPages = Math.max(1, Math.ceil(filteredDocuments.length / PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedDocuments = useMemo(
+    () => filteredDocuments.slice((safeCurrentPage - 1) * PAGE_SIZE, safeCurrentPage * PAGE_SIZE),
+    [filteredDocuments, safeCurrentPage]
+  );
+
   const handleAction = (action: string, doc: FormularDocument) => {
     toast.info(`${action}: ${doc.id}`);
   };
@@ -103,6 +115,7 @@ export default function FormularePage() {
             <h1 className="text-xl font-bold text-foreground">Formulare</h1>
             <p className="text-sm text-muted-foreground mt-0.5">
               {filteredDocuments.length} Dokument{filteredDocuments.length !== 1 ? "e" : ""}
+              {totalPages > 1 && ` · Seite ${safeCurrentPage} von ${totalPages}`}
             </p>
           </div>
           <Button onClick={() => setWizardOpen(true)}>
@@ -131,16 +144,56 @@ export default function FormularePage() {
         {/* Table */}
         <div className="mt-4">
           <DocumentTable
-            documents={filteredDocuments}
+            documents={paginatedDocuments}
             sortField={sortField}
             sortDirection={sortDirection}
-            onSort={handleSort}
+            onSort={(field) => { handleSort(field); setCurrentPage(1); }}
             onEdit={(doc) => handleAction("Bearbeiten", doc)}
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
             onDelete={(doc) => setDeleteTarget(doc)}
             onPrint={(doc) => handleAction("Drucken", doc)}
           />
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+              <span>
+                {(safeCurrentPage - 1) * PAGE_SIZE + 1}–{Math.min(safeCurrentPage * PAGE_SIZE, filteredDocuments.length)} von {filteredDocuments.length}
+              </span>
+              <div className="flex items-center gap-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={safeCurrentPage <= 1}
+                  onClick={() => setCurrentPage((p) => p - 1)}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Zurück
+                </Button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <Button
+                    key={page}
+                    variant={page === safeCurrentPage ? "default" : "outline"}
+                    size="sm"
+                    className="w-8 h-8 p-0"
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                ))}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={safeCurrentPage >= totalPages}
+                  onClick={() => setCurrentPage((p) => p + 1)}
+                >
+                  Weiter
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
