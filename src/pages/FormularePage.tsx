@@ -115,6 +115,7 @@ export default function FormularePage() {
             <h1 className="text-xl font-bold text-foreground">Formulare</h1>
             <p className="text-sm text-muted-foreground mt-0.5">
               {filteredDocuments.length} Dokument{filteredDocuments.length !== 1 ? "e" : ""}
+              {totalPages > 1 && ` · Seite ${safeCurrentPage} von ${totalPages}`}
             </p>
           </div>
           <Button onClick={() => setWizardOpen(true)}>
