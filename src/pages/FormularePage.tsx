@@ -156,11 +156,13 @@ export default function FormularePage() {
           />
 
           {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-              <span>
-                {(safeCurrentPage - 1) * PAGE_SIZE + 1}–{Math.min(safeCurrentPage * PAGE_SIZE, filteredDocuments.length)} von {filteredDocuments.length}
-              </span>
+          <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
+            <span>
+              {filteredDocuments.length > 0
+                ? `${(safeCurrentPage - 1) * PAGE_SIZE + 1}–${Math.min(safeCurrentPage * PAGE_SIZE, filteredDocuments.length)} von ${filteredDocuments.length}`
+                : "0 Einträge"}
+            </span>
+            {totalPages > 1 && (
               <div className="flex items-center gap-1">
                 <Button
                   variant="outline"
@@ -192,8 +194,8 @@ export default function FormularePage() {
                   <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
