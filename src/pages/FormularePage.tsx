@@ -1,8 +1,9 @@
 import { useState, useMemo } from "react";
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FilterBar } from "@/components/formulare/FilterBar";
 import { DocumentTable, type SortField, type SortDirection } from "@/components/formulare/DocumentTable";
+import { DocumentPagination } from "@/components/formulare/DocumentPagination";
 import { NewDocumentWizard } from "@/components/formulare/NewDocumentWizard";
 import { DeleteConfirmDialog } from "@/components/formulare/DeleteConfirmDialog";
 import { MOCK_DOCUMENTS, type FormularDocument, type FormularStatus, type FormularType } from "@/data/formular-types";
@@ -87,13 +88,17 @@ export default function FormularePage() {
     return docs;
   }, [documents, searchQuery, typeFilter, statusFilter, showReleased, sortField, sortDirection]);
 
-  // Reset page when filters change
   const totalPages = Math.max(1, Math.ceil(filteredDocuments.length / PAGE_SIZE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
+
   const paginatedDocuments = useMemo(
     () => filteredDocuments.slice((safeCurrentPage - 1) * PAGE_SIZE, safeCurrentPage * PAGE_SIZE),
     [filteredDocuments, safeCurrentPage]
   );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(Math.min(Math.max(page, 1), totalPages));
+  };
 
   const handleAction = (action: string, doc: FormularDocument) => {
     toast.info(`${action}: ${doc.id}`);
@@ -141,13 +146,26 @@ export default function FormularePage() {
           onResetFilters={resetFilters}
         />
 
+        {/* Top pagination (always visible) */}
+        <DocumentPagination
+          className="mt-3"
+          currentPage={safeCurrentPage}
+          totalPages={totalPages}
+          pageSize={PAGE_SIZE}
+          totalItems={filteredDocuments.length}
+          onPageChange={handlePageChange}
+        />
+
         {/* Table */}
-        <div className="mt-4">
+        <div className="mt-3">
           <DocumentTable
             documents={paginatedDocuments}
             sortField={sortField}
             sortDirection={sortDirection}
-            onSort={(field) => { handleSort(field); setCurrentPage(1); }}
+            onSort={(field) => {
+              handleSort(field);
+              setCurrentPage(1);
+            }}
             onEdit={(doc) => handleAction("Bearbeiten", doc)}
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
@@ -155,47 +173,15 @@ export default function FormularePage() {
             onPrint={(doc) => handleAction("Drucken", doc)}
           />
 
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
-            <span>
-              {filteredDocuments.length > 0
-                ? `${(safeCurrentPage - 1) * PAGE_SIZE + 1}–${Math.min(safeCurrentPage * PAGE_SIZE, filteredDocuments.length)} von ${filteredDocuments.length}`
-                : "0 Einträge"}
-            </span>
-            {totalPages > 1 && (
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={safeCurrentPage <= 1}
-                  onClick={() => setCurrentPage((p) => p - 1)}
-                >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
-                  Zurück
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <Button
-                    key={page}
-                    variant={page === safeCurrentPage ? "default" : "outline"}
-                    size="sm"
-                    className="w-8 h-8 p-0"
-                    onClick={() => setCurrentPage(page)}
-                  >
-                    {page}
-                  </Button>
-                ))}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={safeCurrentPage >= totalPages}
-                  onClick={() => setCurrentPage((p) => p + 1)}
-                >
-                  Weiter
-                  <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
-              </div>
-            )}
-          </div>
+          {/* Bottom pagination */}
+          <DocumentPagination
+            className="mt-4"
+            currentPage={safeCurrentPage}
+            totalPages={totalPages}
+            pageSize={PAGE_SIZE}
+            totalItems={filteredDocuments.length}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
 
