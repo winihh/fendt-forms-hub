@@ -25,8 +25,8 @@ export function DocumentPagination({
 
   return (
     <div className={cn("flex items-center justify-between text-sm text-muted-foreground", className)}>
-      <span>
-        {totalItems > 0 ? `${rangeStart}–${rangeEnd} von ${totalItems}` : "0 Einträge"}
+      <span className="font-medium text-foreground">
+        {totalItems > 0 ? <><span className="tabular-nums">{rangeStart}–{rangeEnd}</span> von <span className="tabular-nums">{totalItems}</span></> : "0 Einträge"}
       </span>
 
       {totalPages > 1 && (
