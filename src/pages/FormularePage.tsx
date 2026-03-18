@@ -138,7 +138,7 @@ export default function FormularePage() {
             onEdit={(doc) => handleAction("Bearbeiten", doc)}
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
-            onDelete={(doc) => handleAction("Löschen", doc)}
+            onDelete={(doc) => setDeleteTarget(doc)}
             onPrint={(doc) => handleAction("Drucken", doc)}
           />
         </div>
@@ -151,6 +151,13 @@ export default function FormularePage() {
         onCreated={() => {
           toast.success("Dokument erfolgreich erzeugt. Übergabe an Signotec…");
         }}
+      />
+
+      {/* Delete confirmation */}
+      <DeleteConfirmDialog
+        document={deleteTarget}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteTarget(null)}
       />
     </div>
   );
