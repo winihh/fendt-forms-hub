@@ -87,6 +87,13 @@ export default function FormularePage() {
     toast.info(`${action}: ${doc.id}`);
   };
 
+  const handleDeleteConfirm = () => {
+    if (!deleteTarget) return;
+    setDocuments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
+    toast.success(`Dokument ${deleteTarget.id} wurde gelöscht.`);
+    setDeleteTarget(null);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Page header */}
