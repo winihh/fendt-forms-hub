@@ -24,6 +24,7 @@ export default function FormularePage() {
   // Sort
   const [sortField, setSortField] = useState<SortField>("lastModified");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const hasActiveFilters = searchQuery !== "" || typeFilter !== "all" || statusFilter !== "all" || showReleased;
 
