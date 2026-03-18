@@ -87,6 +87,14 @@ export default function FormularePage() {
     return docs;
   }, [documents, searchQuery, typeFilter, statusFilter, showReleased, sortField, sortDirection]);
 
+  // Reset page when filters change
+  const totalPages = Math.max(1, Math.ceil(filteredDocuments.length / PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const paginatedDocuments = useMemo(
+    () => filteredDocuments.slice((safeCurrentPage - 1) * PAGE_SIZE, safeCurrentPage * PAGE_SIZE),
+    [filteredDocuments, safeCurrentPage]
+  );
+
   const handleAction = (action: string, doc: FormularDocument) => {
     toast.info(`${action}: ${doc.id}`);
   };
