@@ -391,7 +391,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
             {step === "type" ? "Abbrechen" : "Zurück"}
           </Button>
 
-          {step !== "type" && (
+          {step !== "type" && step !== "confirm" && (
             <Button
               size="default"
               disabled={
@@ -400,17 +400,29 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 (step === "details" && formType === "inspection" && !inspectionResult) ||
                 (step === "details" && formType === "inspection" && inspectionResult === "deviation" && (!deviations || !measures))
               }
-              onClick={() => {
-                if (step === "confirm") {
-                  handleCreate();
-                } else {
-                  setStep(steps[currentStepIndex + 1]);
-                }
-              }}
+              onClick={() => setStep(steps[currentStepIndex + 1])}
             >
-              {step === "confirm" ? "Dokument erzeugen & Signieren" : "Weiter"}
-              {step !== "confirm" && <ArrowRight className="h-4 w-4 ml-1" />}
+              Weiter
+              <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
+          )}
+
+          {step === "confirm" && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="default"
+                onClick={handleCreate}
+              >
+                Formular speichern
+              </Button>
+              <Button
+                size="default"
+                onClick={handleCreate}
+              >
+                Speichern & Signieren
+              </Button>
+            </div>
           )}
         </div>
       </DialogContent>
