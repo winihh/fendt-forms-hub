@@ -46,6 +46,9 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setInspectionNr(1);
     setCustomerName("");
     setVehicleType("");
+    setInspectionResult(null);
+    setDeviations("");
+    setMeasures("");
   };
 
   const handleClose = () => {
