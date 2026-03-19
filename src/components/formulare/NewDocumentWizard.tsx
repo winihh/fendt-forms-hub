@@ -32,6 +32,9 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   const [inspectionNr, setInspectionNr] = useState(1);
   const [customerName, setCustomerName] = useState("");
   const [vehicleType, setVehicleType] = useState("");
+  const [inspectionResult, setInspectionResult] = useState<"ok" | "deviation" | null>(null);
+  const [deviations, setDeviations] = useState("");
+  const [measures, setMeasures] = useState("");
 
   const reset = () => {
     setStep("type");
