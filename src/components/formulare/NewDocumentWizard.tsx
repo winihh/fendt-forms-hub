@@ -335,6 +335,8 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   )}
                 </div>
               )}
+            </div>
+          )}
 
           {/* Step 4: Confirm */}
           {step === "confirm" && (
