@@ -356,6 +356,16 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                     <>
                       <span className="text-muted-foreground">Inspektions-Nr.</span>
                       <span>{inspectionNr}</span>
+                      <span className="text-muted-foreground">Ergebnis</span>
+                      <span>{inspectionResult === "ok" ? "Fahrzeug in Ordnung" : "Abweichungen festgestellt"}</span>
+                      {inspectionResult === "deviation" && (
+                        <>
+                          <span className="text-muted-foreground">Abweichungen</span>
+                          <span className="whitespace-pre-wrap">{deviations || "–"}</span>
+                          <span className="text-muted-foreground">Maßnahmen</span>
+                          <span className="whitespace-pre-wrap">{measures || "–"}</span>
+                        </>
+                      )}
                     </>
                   )}
                 </div>
