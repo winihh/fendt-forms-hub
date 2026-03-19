@@ -281,7 +281,14 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 {formType === "inspection" && (
                   <>
                     <Label className="text-sm font-semibold text-right">Inspektions-Nr.</Label>
-                    <span className="text-sm">{inspectionNr}</span>
+                    <Input
+                      type="number"
+                      min={1}
+                      max={99}
+                      value={inspectionNr}
+                      onChange={(e) => setInspectionNr(Number(e.target.value))}
+                      className="w-14 h-9 rounded-sm text-sm text-center tabular-nums"
+                    />
                   </>
                 )}
               </div>
