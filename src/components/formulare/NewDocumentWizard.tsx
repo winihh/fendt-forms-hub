@@ -212,10 +212,10 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                     <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
                     <div>
                       <p className="text-sm font-semibold text-destructive">
-                        Serviceanmeldung existiert bereits
+                        Serviceanmeldung bereits vorhanden
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Für dieses Fahrzeug wurde bereits eine Serviceanmeldung erstellt (ID: {existingDocId}).
+                        Serviceanmeldung für dieses Fahrzeug ist bereits erfolgt oder vorbereitet (ID: {existingDocId}).
                       </p>
                     </div>
                   </div>
