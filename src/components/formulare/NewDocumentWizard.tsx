@@ -285,8 +285,56 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   </>
                 )}
               </div>
-            </div>
-          )}
+
+              {/* Inspection result - progressive disclosure */}
+              {formType === "inspection" && (
+                <div className="space-y-3 pt-2 border-t border-border">
+                  <Label className="text-sm font-semibold">Ergebnis</Label>
+                  <RadioGroup
+                    value={inspectionResult ?? ""}
+                    onValueChange={(v) => {
+                      setInspectionResult(v as "ok" | "deviation");
+                      if (v === "ok") {
+                        setDeviations("");
+                        setMeasures("");
+                      }
+                    }}
+                    className="space-y-2"
+                  >
+                    <label className={`flex items-center gap-3 p-3 border rounded-sm cursor-pointer transition-colors ${inspectionResult === "ok" ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/30"}`}>
+                      <RadioGroupItem value="ok" />
+                      <span className="text-sm font-medium">Fahrzeug in Ordnung</span>
+                    </label>
+                    <label className={`flex items-center gap-3 p-3 border rounded-sm cursor-pointer transition-colors ${inspectionResult === "deviation" ? "border-destructive/50 bg-destructive/5" : "border-border hover:border-muted-foreground/30"}`}>
+                      <RadioGroupItem value="deviation" />
+                      <span className="text-sm font-medium">Abweichungen festgestellt</span>
+                    </label>
+                  </RadioGroup>
+
+                  {inspectionResult === "deviation" && (
+                    <div className="ml-1 pl-4 border-l-2 border-destructive/30 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-semibold">Abweichungen</Label>
+                        <Textarea
+                          value={deviations}
+                          onChange={(e) => setDeviations(e.target.value)}
+                          placeholder="Festgestellte Abweichungen beschreiben…"
+                          className="rounded-sm text-sm min-h-[72px] resize-none"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-semibold">Maßnahmen</Label>
+                        <Textarea
+                          value={measures}
+                          onChange={(e) => setMeasures(e.target.value)}
+                          placeholder="Eingeleitete oder empfohlene Maßnahmen…"
+                          className="rounded-sm text-sm min-h-[72px] resize-none"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
 
           {/* Step 4: Confirm */}
           {step === "confirm" && (
