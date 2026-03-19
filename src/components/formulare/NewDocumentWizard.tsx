@@ -410,13 +410,13 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
           {step === "confirm" && (
             <div className="flex items-center gap-2">
               <Button
-                variant="outline"
                 size="default"
                 onClick={handleCreate}
               >
                 Formular speichern
               </Button>
               <Button
+                variant="outline"
                 size="default"
                 onClick={handleCreate}
               >
