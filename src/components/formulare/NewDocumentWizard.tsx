@@ -396,7 +396,9 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
               size="default"
               disabled={
                 (step === "vin" && (!vinValidated || !!existingDocId)) ||
-                (step === "details" && !customerName)
+                (step === "details" && !customerName) ||
+                (step === "details" && formType === "inspection" && !inspectionResult) ||
+                (step === "details" && formType === "inspection" && inspectionResult === "deviation" && (!deviations || !measures))
               }
               onClick={() => {
                 if (step === "confirm") {
