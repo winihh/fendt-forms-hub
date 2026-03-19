@@ -371,7 +371,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                Nach dem Erzeugen wird das Dokument zur Signierung an Signotec übergeben.
+                Nach dem Speichern erhält das Dokument den Status „Vorbereitet". Die Signierung über Signotec kann jederzeit nachgeholt werden.
               </p>
             </div>
           )}
