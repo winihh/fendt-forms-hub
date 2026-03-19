@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AlertTriangle, CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
-import type { FormularType } from "@/data/formular-types";
+import { MOCK_DOCUMENTS, type FormularType } from "@/data/formular-types";
 
 interface NewDocumentWizardProps {
   open: boolean;
