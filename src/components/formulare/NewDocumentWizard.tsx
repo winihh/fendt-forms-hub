@@ -9,6 +9,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AlertTriangle, CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
 import type { FormularType } from "@/data/formular-types";
 
@@ -30,6 +32,9 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   const [inspectionNr, setInspectionNr] = useState(1);
   const [customerName, setCustomerName] = useState("");
   const [vehicleType, setVehicleType] = useState("");
+  const [inspectionResult, setInspectionResult] = useState<"ok" | "deviation" | null>(null);
+  const [deviations, setDeviations] = useState("");
+  const [measures, setMeasures] = useState("");
 
   const reset = () => {
     setStep("type");
@@ -41,6 +46,9 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setInspectionNr(1);
     setCustomerName("");
     setVehicleType("");
+    setInspectionResult(null);
+    setDeviations("");
+    setMeasures("");
   };
 
   const handleClose = () => {
@@ -277,6 +285,56 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   </>
                 )}
               </div>
+
+              {/* Inspection result - progressive disclosure */}
+              {formType === "inspection" && (
+                <div className="space-y-3 pt-2 border-t border-border">
+                  <Label className="text-sm font-semibold">Ergebnis</Label>
+                  <RadioGroup
+                    value={inspectionResult ?? ""}
+                    onValueChange={(v) => {
+                      setInspectionResult(v as "ok" | "deviation");
+                      if (v === "ok") {
+                        setDeviations("");
+                        setMeasures("");
+                      }
+                    }}
+                    className="space-y-2"
+                  >
+                    <label className={`flex items-center gap-3 p-3 border rounded-sm cursor-pointer transition-colors ${inspectionResult === "ok" ? "border-primary bg-primary/5" : "border-border hover:border-muted-foreground/30"}`}>
+                      <RadioGroupItem value="ok" />
+                      <span className="text-sm font-medium">Fahrzeug in Ordnung</span>
+                    </label>
+                    <label className={`flex items-center gap-3 p-3 border rounded-sm cursor-pointer transition-colors ${inspectionResult === "deviation" ? "border-destructive/50 bg-destructive/5" : "border-border hover:border-muted-foreground/30"}`}>
+                      <RadioGroupItem value="deviation" />
+                      <span className="text-sm font-medium">Abweichungen festgestellt</span>
+                    </label>
+                  </RadioGroup>
+
+                  {inspectionResult === "deviation" && (
+                    <div className="ml-1 pl-4 border-l-2 border-destructive/30 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-semibold">Abweichungen</Label>
+                        <Textarea
+                          value={deviations}
+                          onChange={(e) => setDeviations(e.target.value)}
+                          placeholder="Festgestellte Abweichungen beschreiben…"
+                          className="rounded-sm text-sm min-h-[72px] resize-none"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label className="text-sm font-semibold">Maßnahmen</Label>
+                        <Textarea
+                          value={measures}
+                          onChange={(e) => setMeasures(e.target.value)}
+                          placeholder="Eingeleitete oder empfohlene Maßnahmen…"
+                          className="rounded-sm text-sm min-h-[72px] resize-none"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -298,6 +356,16 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                     <>
                       <span className="text-muted-foreground">Inspektions-Nr.</span>
                       <span>{inspectionNr}</span>
+                      <span className="text-muted-foreground">Ergebnis</span>
+                      <span>{inspectionResult === "ok" ? "Fahrzeug in Ordnung" : "Abweichungen festgestellt"}</span>
+                      {inspectionResult === "deviation" && (
+                        <>
+                          <span className="text-muted-foreground">Abweichungen</span>
+                          <span className="whitespace-pre-wrap">{deviations || "–"}</span>
+                          <span className="text-muted-foreground">Maßnahmen</span>
+                          <span className="whitespace-pre-wrap">{measures || "–"}</span>
+                        </>
+                      )}
                     </>
                   )}
                 </div>
@@ -328,7 +396,9 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
               size="default"
               disabled={
                 (step === "vin" && (!vinValidated || !!existingDocId)) ||
-                (step === "details" && !customerName)
+                (step === "details" && !customerName) ||
+                (step === "details" && formType === "inspection" && !inspectionResult) ||
+                (step === "details" && formType === "inspection" && inspectionResult === "deviation" && (!deviations || !measures))
               }
               onClick={() => {
                 if (step === "confirm") {
