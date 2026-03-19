@@ -57,31 +57,43 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   };
 
   const handleVinCheck = () => {
-    // Simulate validation
     if (vin.length < 10) {
       setVinError("Bitte geben Sie eine gültige Fahrgestell-Nr. ein.");
       setVinValidated(false);
       return;
     }
 
-    // Simulate: for service, check if already exists
-    if (formType === "service" && vin === "WF0XXXGCDX1234567") {
-      setExistingDocId("DOC-2026-001");
-      setVinError(null);
-      setVinValidated(true);
-      return;
+    // Check for existing service document with this VIN
+    if (formType === "service") {
+      const existingService = MOCK_DOCUMENTS.find(
+        (doc) => doc.type === "service" && doc.vin === vin
+      );
+      if (existingService) {
+        setExistingDocId(existingService.id);
+        setVinError(null);
+        setVinValidated(true);
+        return;
+      }
     }
 
-    // Simulate: for inspection, show existing inspections
-    if (formType === "inspection" && vin === "WF0XXXGCDX7773456") {
-      setInspectionNr(3);
+    // For inspection, find existing inspections and auto-increment
+    if (formType === "inspection") {
+      const existingInspections = MOCK_DOCUMENTS.filter(
+        (doc) => doc.type === "inspection" && doc.vin === vin
+      );
+      if (existingInspections.length > 0) {
+        const maxNr = Math.max(...existingInspections.map((d) => d.inspectionNr ?? 0));
+        setInspectionNr(maxNr + 1);
+      }
     }
 
+    // Simulate vehicle lookup – find matching doc or use fallback
+    const matchingDoc = MOCK_DOCUMENTS.find((doc) => doc.vin === vin);
     setExistingDocId(null);
     setVinError(null);
     setVinValidated(true);
-    setVehicleType("Fendt Bianco Selection 515 SG");
-    setCustomerName("Müller, Hans");
+    setVehicleType(matchingDoc?.vehicleType ?? "Unbekannter Fahrzeugtyp");
+    setCustomerName(matchingDoc?.customer ?? "");
   };
 
   const handleCreate = () => {
