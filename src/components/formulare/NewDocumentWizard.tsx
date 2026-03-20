@@ -365,6 +365,14 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   </div>
                 </div>
               )}
+              {formType === "inspection" && inspectionGapWarning && !inspectionConflict && (
+                <div className="rounded-sm p-4" style={{ backgroundColor: "hsl(45 93% 94%)", borderColor: "hsl(45 93% 47% / 0.3)", borderWidth: 1, borderStyle: "solid" }}>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" style={{ color: "hsl(45 93% 37%)" }} />
+                    <p className="text-sm text-foreground">{inspectionGapWarning}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Inspection result - progressive disclosure */}
               {formType === "inspection" && (
