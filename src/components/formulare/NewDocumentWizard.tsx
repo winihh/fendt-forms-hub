@@ -318,9 +318,9 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
 
               {/* Inspection number conflict warning */}
               {formType === "inspection" && inspectionConflict === "overwrite" && (
-                <div className="bg-warning/10 border border-warning/30 rounded-sm p-4">
+                <div className="rounded-sm p-4" style={{ backgroundColor: "hsl(45 93% 94%)", borderColor: "hsl(45 93% 47% / 0.3)", borderWidth: 1, borderStyle: "solid" }}>
                   <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+                    <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" style={{ color: "hsl(45 93% 37%)" }} />
                     <div>
                       <p className="text-sm font-semibold text-foreground">
                         Achtung, Dichtheitsprüfung Nr. {inspectionNr} schon vorhanden
