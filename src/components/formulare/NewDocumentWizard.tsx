@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -95,6 +95,17 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setVehicleType(matchingDoc?.vehicleType ?? "Unbekannter Fahrzeugtyp");
     setCustomerName(matchingDoc?.customer ?? "");
   };
+
+  // Check for inspection number conflicts
+  const inspectionConflict = useMemo(() => {
+    if (formType !== "inspection" || !vinValidated || !vin) return null;
+    const existing = MOCK_DOCUMENTS.find(
+      (doc) => doc.type === "inspection" && doc.vin === vin && doc.inspectionNr === inspectionNr
+    );
+    if (!existing) return null;
+    if (existing.status === "released") return "released";
+    return "overwrite"; // prepared or signed
+  }, [formType, vin, vinValidated, inspectionNr]);
 
   const handleCreate = () => {
     onCreated();
@@ -305,6 +316,38 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 )}
               </div>
 
+              {/* Inspection number conflict warning */}
+              {formType === "inspection" && inspectionConflict === "overwrite" && (
+                <div className="rounded-sm p-4" style={{ backgroundColor: "hsl(45 93% 94%)", borderColor: "hsl(45 93% 47% / 0.3)", borderWidth: 1, borderStyle: "solid" }}>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" style={{ color: "hsl(45 93% 37%)" }} />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        Achtung, Dichtheitsprüfung Nr. {inspectionNr} schon vorhanden
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Die bestehende Prüfung wird beim Speichern überschrieben.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {formType === "inspection" && inspectionConflict === "released" && (
+                <div className="bg-destructive/10 border border-destructive/30 rounded-sm p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-destructive">
+                        Dichtheitsprüfung Nr. {inspectionNr} schon vorhanden und freigegeben
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Eine freigegebene Prüfung kann nicht überschrieben werden. Bitte wählen Sie eine andere Inspektions-Nr.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Inspection result - progressive disclosure */}
               {formType === "inspection" && (
                 <div className="space-y-3 pt-2 border-t border-border">
@@ -431,6 +474,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
               <Button
                 size="default"
                 onClick={handleCreate}
+                disabled={inspectionConflict === "released"}
               >
                 Formular speichern
               </Button>
@@ -438,6 +482,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 variant="outline"
                 size="default"
                 onClick={handleCreate}
+                disabled={inspectionConflict === "released"}
               >
                 Speichern & Signieren
               </Button>
