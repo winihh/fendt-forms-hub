@@ -287,6 +287,29 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Step 3: Details */}
+          {step === "details" && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-[140px_1fr] gap-y-3 gap-x-4 items-center">
+                <Label className="text-sm font-semibold text-right">Formularart</Label>
+                <span className="text-sm">{formType === "service" ? "Serviceanmeldung" : "Dichtheitsinspektion"}</span>
+
+                <Label className="text-sm font-semibold text-right">Fahrgestell-Nr.</Label>
+                <span className="text-sm font-mono">{vin}</span>
+
+                <Label className="text-sm font-semibold text-right">Fahrzeugtyp</Label>
+                <span className="text-sm">{vehicleType}</span>
+
+                <Label className="text-sm font-semibold text-right">Endkunde</Label>
+                <Input
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="h-9 rounded-sm text-sm"
+                />
+
                 {formType === "inspection" && (
                   <>
                     <Label className="text-sm font-semibold text-right">Inspektions-Nr.</Label>
