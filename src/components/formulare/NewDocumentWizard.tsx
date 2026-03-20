@@ -316,6 +316,38 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 )}
               </div>
 
+              {/* Inspection number conflict warning */}
+              {formType === "inspection" && inspectionConflict === "overwrite" && (
+                <div className="bg-warning/10 border border-warning/30 rounded-sm p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        Achtung, Dichtheitsprüfung Nr. {inspectionNr} schon vorhanden
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Die bestehende Prüfung wird beim Speichern überschrieben.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {formType === "inspection" && inspectionConflict === "released" && (
+                <div className="bg-destructive/10 border border-destructive/30 rounded-sm p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-semibold text-destructive">
+                        Dichtheitsprüfung Nr. {inspectionNr} schon vorhanden und freigegeben
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Eine freigegebene Prüfung kann nicht überschrieben werden. Bitte wählen Sie eine andere Inspektions-Nr.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Inspection result - progressive disclosure */}
               {formType === "inspection" && (
                 <div className="space-y-3 pt-2 border-t border-border">
