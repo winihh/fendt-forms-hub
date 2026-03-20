@@ -107,6 +107,24 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     return "overwrite"; // prepared or signed
   }, [formType, vin, vinValidated, inspectionNr]);
 
+  // Check if inspection number skips a sequence
+  const inspectionGapWarning = useMemo(() => {
+    if (formType !== "inspection" || !vinValidated || !vin) return null;
+    const existingInspections = MOCK_DOCUMENTS.filter(
+      (doc) => doc.type === "inspection" && doc.vin === vin
+    );
+    if (existingInspections.length === 0 && inspectionNr > 1) {
+      return `Es gibt noch keine Inspektion für dieses Fahrzeug. Wollen Sie mit Nr. ${inspectionNr} statt Nr. 1 beginnen?`;
+    }
+    if (existingInspections.length > 0) {
+      const maxNr = Math.max(...existingInspections.map((d) => d.inspectionNr ?? 0));
+      if (inspectionNr > maxNr + 1) {
+        return `Die letzte Inspektion war Nr. ${maxNr}. Wollen Sie eine Inspektion auslassen?`;
+      }
+    }
+    return null;
+  }, [formType, vin, vinValidated, inspectionNr]);
+
   const handleCreate = () => {
     onCreated();
     handleClose();
@@ -344,6 +362,14 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                         Eine freigegebene Prüfung kann nicht überschrieben werden. Bitte wählen Sie eine andere Inspektions-Nr.
                       </p>
                     </div>
+                  </div>
+                </div>
+              )}
+              {formType === "inspection" && inspectionGapWarning && !inspectionConflict && (
+                <div className="rounded-sm p-4" style={{ backgroundColor: "hsl(45 93% 94%)", borderColor: "hsl(45 93% 47% / 0.3)", borderWidth: 1, borderStyle: "solid" }}>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" style={{ color: "hsl(45 93% 37%)" }} />
+                    <p className="text-sm text-foreground">{inspectionGapWarning}</p>
                   </div>
                 </div>
               )}
