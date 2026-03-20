@@ -474,6 +474,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
               <Button
                 size="default"
                 onClick={handleCreate}
+                disabled={inspectionConflict === "released"}
               >
                 Formular speichern
               </Button>
@@ -481,6 +482,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 variant="outline"
                 size="default"
                 onClick={handleCreate}
+                disabled={inspectionConflict === "released"}
               >
                 Speichern & Signieren
               </Button>
