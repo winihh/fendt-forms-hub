@@ -107,6 +107,24 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     return "overwrite"; // prepared or signed
   }, [formType, vin, vinValidated, inspectionNr]);
 
+  // Check if inspection number skips a sequence
+  const inspectionGapWarning = useMemo(() => {
+    if (formType !== "inspection" || !vinValidated || !vin) return null;
+    const existingInspections = MOCK_DOCUMENTS.filter(
+      (doc) => doc.type === "inspection" && doc.vin === vin
+    );
+    if (existingInspections.length === 0 && inspectionNr > 1) {
+      return `Es gibt noch keine Inspektion für dieses Fahrzeug. Wollen Sie mit Nr. ${inspectionNr} statt Nr. 1 beginnen?`;
+    }
+    if (existingInspections.length > 0) {
+      const maxNr = Math.max(...existingInspections.map((d) => d.inspectionNr ?? 0));
+      if (inspectionNr > maxNr + 1) {
+        return `Die letzte Inspektion war Nr. ${maxNr}. Wollen Sie eine Inspektion auslassen?`;
+      }
+    }
+    return null;
+  }, [formType, vin, vinValidated, inspectionNr]);
+
   const handleCreate = () => {
     onCreated();
     handleClose();
