@@ -96,6 +96,17 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setCustomerName(matchingDoc?.customer ?? "");
   };
 
+  // Check for inspection number conflicts
+  const inspectionConflict = useMemo(() => {
+    if (formType !== "inspection" || !vinValidated || !vin) return null;
+    const existing = MOCK_DOCUMENTS.find(
+      (doc) => doc.type === "inspection" && doc.vin === vin && doc.inspectionNr === inspectionNr
+    );
+    if (!existing) return null;
+    if (existing.status === "released") return "released";
+    return "overwrite"; // prepared or signed
+  }, [formType, vin, vinValidated, inspectionNr]);
+
   const handleCreate = () => {
     onCreated();
     handleClose();
