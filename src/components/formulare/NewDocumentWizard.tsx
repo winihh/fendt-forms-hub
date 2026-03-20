@@ -285,15 +285,6 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                       </div>
                     ))}
                   </div>
-                  <div className="mt-3 flex items-center gap-2">
-                    <Label className="text-xs font-semibold">Nächste Nr.:</Label>
-                    <Input
-                      type="number"
-                      value={inspectionNr}
-                      onChange={(e) => setInspectionNr(Number(e.target.value))}
-                      className="w-20 h-8 rounded-sm text-sm"
-                    />
-                  </div>
                 </div>
               )}
             </div>
