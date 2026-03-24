@@ -11,8 +11,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AlertTriangle, CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
 import { MOCK_DOCUMENTS, type FormularType } from "@/data/formular-types";
+
+type FormLanguage = "de" | "en" | "fr" | "it" | "nl";
+
+const LANGUAGE_OPTIONS: { value: FormLanguage; label: string }[] = [
+  { value: "de", label: "Deutsch" },
+  { value: "en", label: "Englisch" },
+  { value: "fr", label: "Französisch" },
+  { value: "it", label: "Italienisch" },
+  { value: "nl", label: "Niederländisch" },
+];
+
+function getDefaultLanguage(): FormLanguage {
+  const browserLang = navigator.language?.split("-")[0]?.toLowerCase();
+  const supported: FormLanguage[] = ["de", "en", "fr", "it", "nl"];
+  return supported.includes(browserLang as FormLanguage) ? (browserLang as FormLanguage) : "de";
+}
 
 interface NewDocumentWizardProps {
   open: boolean;
@@ -35,6 +58,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   const [inspectionResult, setInspectionResult] = useState<"ok" | "deviation" | null>(null);
   const [deviations, setDeviations] = useState("");
   const [measures, setMeasures] = useState("");
+  const [formLanguage, setFormLanguage] = useState<FormLanguage>(getDefaultLanguage());
 
   const reset = () => {
     setStep("type");
@@ -49,6 +73,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setInspectionResult(null);
     setDeviations("");
     setMeasures("");
+    setFormLanguage(getDefaultLanguage());
   };
 
   const handleClose = () => {
@@ -310,6 +335,20 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   className="h-9 rounded-sm text-sm"
                 />
 
+                <Label className="text-sm font-semibold text-right">Formularsprache</Label>
+                <Select value={formLanguage} onValueChange={(v) => setFormLanguage(v as FormLanguage)}>
+                  <SelectTrigger className="h-9 rounded-sm text-sm w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LANGUAGE_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 {formType === "inspection" && (
                   <>
                     <Label className="text-sm font-semibold text-right">Inspektions-Nr.</Label>
@@ -431,6 +470,8 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   <span>{vehicleType}</span>
                   <span className="text-muted-foreground">Endkunde</span>
                   <span>{customerName}</span>
+                  <span className="text-muted-foreground">Formularsprache</span>
+                  <span>{LANGUAGE_OPTIONS.find((o) => o.value === formLanguage)?.label}</span>
                   {formType === "inspection" && (
                     <>
                       <span className="text-muted-foreground">Inspektions-Nr.</span>
