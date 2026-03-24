@@ -73,6 +73,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setInspectionResult(null);
     setDeviations("");
     setMeasures("");
+    setFormLanguage(getDefaultLanguage());
   };
 
   const handleClose = () => {
