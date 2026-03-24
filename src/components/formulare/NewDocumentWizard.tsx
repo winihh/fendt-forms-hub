@@ -340,25 +340,83 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
 
           {/* Step 3: Details */}
           {step === "details" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-[140px_1fr] gap-y-3 gap-x-4 items-center">
-                <Label className="text-sm font-semibold text-right">Formularart</Label>
-                <span className="text-sm">{formType === "service" ? "Serviceanmeldung" : "Dichtheitsinspektion"}</span>
+            <div className="space-y-5">
+              {/* Fahrzeuginfo (read-only) */}
+              <div className="grid grid-cols-[120px_1fr] gap-y-1.5 gap-x-4 items-center text-sm">
+                <span className="text-muted-foreground">Formularart</span>
+                <span>{formType === "service" ? "Serviceanmeldung" : "Dichtheitsinspektion"}</span>
+                <span className="text-muted-foreground">Fahrgestell-Nr.</span>
+                <span className="font-mono">{vin}</span>
+                <span className="text-muted-foreground">Fahrzeugtyp</span>
+                <span>{vehicleType}</span>
+              </div>
 
-                <Label className="text-sm font-semibold text-right">Fahrgestell-Nr.</Label>
-                <span className="text-sm font-mono">{vin}</span>
+              <div className="border-t border-border" />
 
-                <Label className="text-sm font-semibold text-right">Fahrzeugtyp</Label>
-                <span className="text-sm">{vehicleType}</span>
+              {/* Personendaten */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-bold text-foreground">Personendaten</h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Vorname *</Label>
+                    <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} className="h-9 rounded-sm text-sm" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Nachname *</Label>
+                    <Input value={lastName} onChange={(e) => setLastName(e.target.value)} className="h-9 rounded-sm text-sm" />
+                  </div>
+                </div>
+              </div>
 
-                <Label className="text-sm font-semibold text-right">Endkunde</Label>
-                <Input
-                  value={customerName}
-                  onChange={(e) => setCustomerName(e.target.value)}
-                  className="h-9 rounded-sm text-sm"
-                />
+              {/* Adressdaten */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-bold text-foreground">Adresse</h4>
+                <div className="grid grid-cols-[1fr_100px] gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Straße *</Label>
+                    <Input value={street} onChange={(e) => setStreet(e.target.value)} className="h-9 rounded-sm text-sm" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Hausnr. *</Label>
+                    <Input value={houseNr} onChange={(e) => setHouseNr(e.target.value)} className="h-9 rounded-sm text-sm" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-[120px_1fr] gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">PLZ *</Label>
+                    <Input value={zip} onChange={(e) => setZip(e.target.value)} className="h-9 rounded-sm text-sm" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Ort *</Label>
+                    <Input value={city} onChange={(e) => setCity(e.target.value)} className="h-9 rounded-sm text-sm" />
+                  </div>
+                </div>
+                <div className="space-y-1 max-w-[200px]">
+                  <Label className="text-xs text-muted-foreground">Land *</Label>
+                  <Input value={country} onChange={(e) => setCountry(e.target.value)} className="h-9 rounded-sm text-sm" />
+                </div>
+              </div>
 
-                <Label className="text-sm font-semibold text-right">Formularsprache</Label>
+              {/* Kontaktdaten */}
+              <div className="space-y-3">
+                <h4 className="text-sm font-bold text-foreground">Kontakt <span className="font-normal text-muted-foreground">(optional)</span></h4>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">E-Mail</Label>
+                    <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="h-9 rounded-sm text-sm" placeholder="max@beispiel.de" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs text-muted-foreground">Telefon</Label>
+                    <Input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-9 rounded-sm text-sm" placeholder="+49 …" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-border" />
+
+              {/* Formularsprache */}
+              <div className="flex items-center gap-4">
+                <Label className="text-sm font-semibold whitespace-nowrap">Formularsprache *</Label>
                 <Select value={formLanguage} onValueChange={(v) => setFormLanguage(v as FormLanguage)}>
                   <SelectTrigger className="h-9 rounded-sm text-sm w-48">
                     <SelectValue />
@@ -371,6 +429,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
 
                 {formType === "inspection" && (
                   <>
