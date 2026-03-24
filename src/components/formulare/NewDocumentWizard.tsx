@@ -431,20 +431,22 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 </Select>
               </div>
 
-                {formType === "inspection" && (
-                  <>
-                    <Label className="text-sm font-semibold text-right">Inspektions-Nr.</Label>
+              {formType === "inspection" && (
+                <div className="space-y-3">
+                  <div className="border-t border-border" />
+                  <div className="flex items-center gap-4">
+                    <Label className="text-sm font-semibold whitespace-nowrap">Inspektions-Nr. *</Label>
                     <Input
                       type="number"
                       min={1}
                       max={99}
                       value={inspectionNr}
                       onChange={(e) => setInspectionNr(Number(e.target.value))}
-                      className="w-14 h-9 rounded-sm text-sm text-center tabular-nums"
+                      className="w-16 h-9 rounded-sm text-sm text-center tabular-nums"
                     />
-                  </>
-                )}
-              </div>
+                  </div>
+                </div>
+              )}
 
               {/* Inspection number conflict warning */}
               {formType === "inspection" && inspectionConflict === "overwrite" && (
