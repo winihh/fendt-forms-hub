@@ -190,7 +190,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[640px] rounded-sm shadow-modal p-0 gap-0">
+      <DialogContent className="sm:max-w-[640px] max-h-[90vh] flex flex-col rounded-sm shadow-modal p-0 gap-0">
         <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
           <DialogTitle className="text-lg font-bold text-foreground">Neues Dokument erstellen</DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground">
@@ -210,7 +210,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
           </div>
         </DialogHeader>
 
-        <div className="px-6 py-6 min-h-[280px]">
+        <div className="px-6 py-6 min-h-[280px] overflow-y-auto flex-1">
           {/* Step 1: Type selection */}
           {step === "type" && (
             <div className="space-y-3">
