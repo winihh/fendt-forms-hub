@@ -53,7 +53,15 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   const [vinError, setVinError] = useState<string | null>(null);
   const [existingDocId, setExistingDocId] = useState<string | null>(null);
   const [inspectionNr, setInspectionNr] = useState(1);
-  const [customerName, setCustomerName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [street, setStreet] = useState("");
+  const [houseNr, setHouseNr] = useState("");
+  const [zip, setZip] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("Deutschland");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [vehicleType, setVehicleType] = useState("");
   const [inspectionResult, setInspectionResult] = useState<"ok" | "deviation" | null>(null);
   const [deviations, setDeviations] = useState("");
@@ -68,7 +76,15 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setVinError(null);
     setExistingDocId(null);
     setInspectionNr(1);
-    setCustomerName("");
+    setFirstName("");
+    setLastName("");
+    setStreet("");
+    setHouseNr("");
+    setZip("");
+    setCity("");
+    setCountry("Deutschland");
+    setEmail("");
+    setPhone("");
     setVehicleType("");
     setInspectionResult(null);
     setDeviations("");
@@ -118,7 +134,14 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setVinError(null);
     setVinValidated(true);
     setVehicleType(matchingDoc?.vehicleType ?? "Unbekannter Fahrzeugtyp");
-    setCustomerName(matchingDoc?.customer ?? "");
+    // Pre-fill customer name from existing data
+    const nameParts = (matchingDoc?.customer ?? "").split(", ");
+    if (nameParts.length === 2) {
+      setLastName(nameParts[0]);
+      setFirstName(nameParts[1]);
+    } else if (matchingDoc?.customer) {
+      setLastName(matchingDoc.customer);
+    }
   };
 
   // Check for inspection number conflicts
