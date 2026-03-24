@@ -58,6 +58,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   const [inspectionResult, setInspectionResult] = useState<"ok" | "deviation" | null>(null);
   const [deviations, setDeviations] = useState("");
   const [measures, setMeasures] = useState("");
+  const [formLanguage, setFormLanguage] = useState<FormLanguage>(getDefaultLanguage());
 
   const reset = () => {
     setStep("type");
