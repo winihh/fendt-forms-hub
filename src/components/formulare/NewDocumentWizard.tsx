@@ -11,8 +11,31 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AlertTriangle, CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
 import { MOCK_DOCUMENTS, type FormularType } from "@/data/formular-types";
+
+type FormLanguage = "de" | "en" | "fr" | "it" | "nl";
+
+const LANGUAGE_OPTIONS: { value: FormLanguage; label: string }[] = [
+  { value: "de", label: "Deutsch" },
+  { value: "en", label: "Englisch" },
+  { value: "fr", label: "Französisch" },
+  { value: "it", label: "Italienisch" },
+  { value: "nl", label: "Niederländisch" },
+];
+
+function getDefaultLanguage(): FormLanguage {
+  const browserLang = navigator.language?.split("-")[0]?.toLowerCase();
+  const supported: FormLanguage[] = ["de", "en", "fr", "it", "nl"];
+  return supported.includes(browserLang as FormLanguage) ? (browserLang as FormLanguage) : "de";
+}
 
 interface NewDocumentWizardProps {
   open: boolean;
