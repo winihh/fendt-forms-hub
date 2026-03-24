@@ -334,6 +334,20 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   className="h-9 rounded-sm text-sm"
                 />
 
+                <Label className="text-sm font-semibold text-right">Formularsprache</Label>
+                <Select value={formLanguage} onValueChange={(v) => setFormLanguage(v as FormLanguage)}>
+                  <SelectTrigger className="h-9 rounded-sm text-sm w-48">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LANGUAGE_OPTIONS.map((opt) => (
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
                 {formType === "inspection" && (
                   <>
                     <Label className="text-sm font-semibold text-right">Inspektions-Nr.</Label>
