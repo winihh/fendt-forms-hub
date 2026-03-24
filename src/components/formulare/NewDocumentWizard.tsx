@@ -469,6 +469,8 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   <span>{vehicleType}</span>
                   <span className="text-muted-foreground">Endkunde</span>
                   <span>{customerName}</span>
+                  <span className="text-muted-foreground">Formularsprache</span>
+                  <span>{LANGUAGE_OPTIONS.find((o) => o.value === formLanguage)?.label}</span>
                   {formType === "inspection" && (
                     <>
                       <span className="text-muted-foreground">Inspektions-Nr.</span>
