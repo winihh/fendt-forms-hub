@@ -553,7 +553,21 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   <span className="text-muted-foreground">Fahrzeugtyp</span>
                   <span>{vehicleType}</span>
                   <span className="text-muted-foreground">Endkunde</span>
-                  <span>{customerName}</span>
+                  <span>{firstName} {lastName}</span>
+                  <span className="text-muted-foreground">Adresse</span>
+                  <span>{street} {houseNr}, {zip} {city}, {country}</span>
+                  {email && (
+                    <>
+                      <span className="text-muted-foreground">E-Mail</span>
+                      <span>{email}</span>
+                    </>
+                  )}
+                  {phone && (
+                    <>
+                      <span className="text-muted-foreground">Telefon</span>
+                      <span>{phone}</span>
+                    </>
+                  )}
                   <span className="text-muted-foreground">Formularsprache</span>
                   <span>{LANGUAGE_OPTIONS.find((o) => o.value === formLanguage)?.label}</span>
                   {formType === "inspection" && (
