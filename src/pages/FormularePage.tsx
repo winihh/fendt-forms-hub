@@ -131,7 +131,7 @@ export default function FormularePage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-[1400px] mx-auto px-6 py-4">
+      <div className="max-w-[965px] mx-auto px-6 py-4">
         {/* Filter bar */}
         <FilterBar
           searchQuery={searchQuery}
