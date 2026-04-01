@@ -115,7 +115,7 @@ export default function FormularePage() {
     <div className="min-h-screen bg-background">
       {/* Page header */}
       <div className="border-b border-border bg-background">
-        <div className="max-w-[1400px] mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="max-w-[965px] mx-auto px-6 py-5 flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-foreground">Formulare</h1>
             <p className="text-sm text-muted-foreground mt-0.5">
