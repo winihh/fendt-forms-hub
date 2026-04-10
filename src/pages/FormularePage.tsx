@@ -5,7 +5,6 @@ import { FilterBar } from "@/components/formulare/FilterBar";
 import { DocumentTable, type SortField, type SortDirection } from "@/components/formulare/DocumentTable";
 import { DocumentPagination } from "@/components/formulare/DocumentPagination";
 import { NewDocumentWizard } from "@/components/formulare/NewDocumentWizard";
-import { DeleteConfirmDialog } from "@/components/formulare/DeleteConfirmDialog";
 import { MOCK_DOCUMENTS, type FormularDocument, type FormularStatus, type FormularType } from "@/data/formular-types";
 import { toast } from "sonner";
 
@@ -14,7 +13,6 @@ const PAGE_SIZE = 20;
 export default function FormularePage() {
   const [documents, setDocuments] = useState<FormularDocument[]>(MOCK_DOCUMENTS);
   const [wizardOpen, setWizardOpen] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<FormularDocument | null>(null);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -104,13 +102,6 @@ export default function FormularePage() {
     toast.info(`${action}: ${doc.id}`);
   };
 
-  const handleDeleteConfirm = () => {
-    if (!deleteTarget) return;
-    setDocuments((prev) => prev.filter((d) => d.id !== deleteTarget.id));
-    toast.success(`Dokument ${deleteTarget.id} wurde gelöscht.`);
-    setDeleteTarget(null);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       {/* Page header */}
@@ -169,7 +160,6 @@ export default function FormularePage() {
             onEdit={(doc) => handleAction("Bearbeiten", doc)}
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
-            onDelete={(doc) => setDeleteTarget(doc)}
             onRelease={(doc) => handleAction("Freigeben", doc)}
           />
 
@@ -192,13 +182,6 @@ export default function FormularePage() {
         onCreated={() => {
           toast.success("Dokument erfolgreich erzeugt. Übergabe an Signotec…");
         }}
-      />
-
-      {/* Delete confirmation */}
-      <DeleteConfirmDialog
-        document={deleteTarget}
-        onConfirm={handleDeleteConfirm}
-        onCancel={() => setDeleteTarget(null)}
       />
     </div>
   );
