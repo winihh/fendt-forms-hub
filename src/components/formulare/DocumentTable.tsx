@@ -32,8 +32,8 @@ const STATUS_VARIANT: Record<FormularStatus, "prepared" | "signed" | "released">
 };
 
 const TYPE_LABELS = {
-  service: "Serviceanmeldung",
-  inspection: "Dichtheitsinspektion",
+  service: "Service",
+  inspection: "Dichtheit",
 };
 
 export type SortField = "type" | "vin" | "vehicleType" | "customer" | "lastModified" | "status";
@@ -80,27 +80,19 @@ export function DocumentTable({
               </TooltipTrigger>
               <TooltipContent>Bearbeiten</TooltipContent>
             </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onDownload(doc)}>
-                  <Download className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Herunterladen</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost-destructive" size="icon" onClick={() => onDelete(doc)}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Löschen</TooltipContent>
-            </Tooltip>
           </div>
         );
       case "signed":
         return (
           <div className="flex items-center justify-end gap-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={() => onView(doc)}>
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ansehen</TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" onClick={() => onRelease(doc)}>
@@ -149,7 +141,7 @@ export function DocumentTable({
         <thead>
           <tr className="bg-surface-muted">
             {[
-              { field: "type" as SortField, label: "Formularart", width: "w-[160px]" },
+              { field: "type" as SortField, label: "Formularart", width: "w-[110px]" },
               { field: "vin" as SortField, label: "Fahrgestell-Nr.", width: "w-[170px]" },
               { field: "vehicleType" as SortField, label: "Fahrzeugtyp", width: "" },
               { field: "customer" as SortField, label: "Endkunde", width: "" },
@@ -167,7 +159,7 @@ export function DocumentTable({
                 </span>
               </th>
             ))}
-            <th className="px-3 py-3 text-right text-xs font-bold uppercase tracking-wider text-primary w-[120px]">
+              <th className="px-3 py-3 text-right text-xs font-bold uppercase tracking-wider text-primary w-[140px]">
               Aktionen
             </th>
           </tr>
