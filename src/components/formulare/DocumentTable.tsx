@@ -5,7 +5,7 @@ import {
   Eye,
   Download,
   Trash2,
-  Printer,
+  CheckCircle,
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
@@ -48,7 +48,7 @@ interface DocumentTableProps {
   onView: (doc: FormularDocument) => void;
   onDownload: (doc: FormularDocument) => void;
   onDelete: (doc: FormularDocument) => void;
-  onPrint: (doc: FormularDocument) => void;
+  onRelease: (doc: FormularDocument) => void;
 }
 
 function SortIcon({ field, currentField, direction }: { field: SortField; currentField: SortField; direction: SortDirection }) {
@@ -65,7 +65,7 @@ export function DocumentTable({
   onView,
   onDownload,
   onDelete,
-  onPrint,
+  onRelease,
 }: DocumentTableProps) {
   const renderActions = (doc: FormularDocument) => {
     switch (doc.status) {
@@ -103,11 +103,11 @@ export function DocumentTable({
           <div className="flex items-center justify-end gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onView(doc)}>
-                  <Eye className="h-4 w-4" />
+                <Button variant="ghost" size="icon" onClick={() => onRelease(doc)}>
+                  <CheckCircle className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Ansehen</TooltipContent>
+              <TooltipContent>Freigeben</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -124,19 +124,19 @@ export function DocumentTable({
           <div className="flex items-center justify-end gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={() => onView(doc)}>
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ansehen</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" onClick={() => onDownload(doc)}>
                   <Download className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Herunterladen</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onPrint(doc)}>
-                  <Printer className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Drucken</TooltipContent>
             </Tooltip>
           </div>
         );
@@ -149,25 +149,25 @@ export function DocumentTable({
         <thead>
           <tr className="bg-surface-muted">
             {[
-              { field: "type" as SortField, label: "Formularart", width: "w-[180px]" },
-              { field: "vin" as SortField, label: "Fahrgestell-Nr.", width: "w-[200px]" },
+              { field: "type" as SortField, label: "Formularart", width: "w-[160px]" },
+              { field: "vin" as SortField, label: "Fahrgestell-Nr.", width: "w-[170px]" },
               { field: "vehicleType" as SortField, label: "Fahrzeugtyp", width: "" },
               { field: "customer" as SortField, label: "Endkunde", width: "" },
-              { field: "lastModified" as SortField, label: "Letzte Änderung", width: "w-[130px]" },
-              { field: "status" as SortField, label: "Status", width: "w-[140px]" },
+              { field: "lastModified" as SortField, label: "Geändert", width: "w-[100px]" },
+              { field: "status" as SortField, label: "Status", width: "w-[110px]" },
             ].map((col) => (
               <th
                 key={col.field}
-                className={`px-4 py-3 text-left text-xs font-bold uppercase tracking-wider text-primary cursor-pointer select-none hover:bg-muted/50 transition-colors ${col.width}`}
+                className={`px-3 py-3 text-left text-xs font-bold uppercase tracking-wider text-primary cursor-pointer select-none hover:bg-muted/50 transition-colors ${col.width}`}
                 onClick={() => onSort(col.field)}
               >
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1">
                   {col.label}
                   <SortIcon field={col.field} currentField={sortField} direction={sortDirection} />
                 </span>
               </th>
             ))}
-            <th className="px-4 py-3 text-right text-xs font-bold uppercase tracking-wider text-primary w-[160px]">
+            <th className="px-3 py-3 text-right text-xs font-bold uppercase tracking-wider text-primary w-[120px]">
               Aktionen
             </th>
           </tr>
@@ -187,24 +187,24 @@ export function DocumentTable({
                   doc.highlighted ? "animate-row-highlight" : ""
                 }`}
               >
-                <td className="px-4 py-2">
+                <td className="px-3 py-2">
                   <span className="text-sm font-medium">{TYPE_LABELS[doc.type]}</span>
                   {doc.type === "inspection" && doc.inspectionNr && (
                     <span className="ml-1 text-xs text-muted-foreground">({doc.inspectionNr})</span>
                   )}
                 </td>
-                <td className="px-4 py-2 text-sm font-mono tabular-nums">{doc.vin}</td>
-                <td className="px-4 py-2 text-sm truncate max-w-[200px]">{doc.vehicleType}</td>
-                <td className="px-4 py-2 text-sm">{doc.customer}</td>
-                <td className="px-4 py-2 text-sm tabular-nums">
+                <td className="px-3 py-2 text-sm font-mono tabular-nums">{doc.vin}</td>
+                <td className="px-3 py-2 text-sm truncate max-w-[180px]">{doc.vehicleType}</td>
+                <td className="px-3 py-2 text-sm truncate max-w-[120px]">{doc.customer}</td>
+                <td className="px-3 py-2 text-sm tabular-nums">
                   {format(doc.lastModified, "dd.MM.yyyy", { locale: de })}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-3 py-2">
                   <Badge variant={STATUS_VARIANT[doc.status]}>
                     {STATUS_LABELS[doc.status]}
                   </Badge>
                 </td>
-                <td className="px-4 py-2">{renderActions(doc)}</td>
+                <td className="px-3 py-2">{renderActions(doc)}</td>
               </tr>
             ))
           )}

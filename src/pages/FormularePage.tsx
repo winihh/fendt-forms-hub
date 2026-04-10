@@ -170,7 +170,7 @@ export default function FormularePage() {
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
             onDelete={(doc) => setDeleteTarget(doc)}
-            onPrint={(doc) => handleAction("Drucken", doc)}
+            onRelease={(doc) => handleAction("Freigeben", doc)}
           />
 
           {/* Bottom pagination */}
