@@ -20,7 +20,7 @@ export default function FormularePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<FormularType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<FormularStatus | "all">("all");
-  const [showReleased, setShowReleased] = useState(false);
+  const [showReleased, setShowReleased] = useState(true);
 
   // Sort
   const [sortField, setSortField] = useState<SortField>("lastModified");
