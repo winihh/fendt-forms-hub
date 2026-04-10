@@ -4,7 +4,6 @@ import {
   Pencil,
   Eye,
   Download,
-  Trash2,
   CheckCircle,
   ArrowUpDown,
   ArrowUp,
@@ -47,7 +46,6 @@ interface DocumentTableProps {
   onEdit: (doc: FormularDocument) => void;
   onView: (doc: FormularDocument) => void;
   onDownload: (doc: FormularDocument) => void;
-  onDelete: (doc: FormularDocument) => void;
   onRelease: (doc: FormularDocument) => void;
 }
 
@@ -64,7 +62,6 @@ export function DocumentTable({
   onEdit,
   onView,
   onDownload,
-  onDelete,
   onRelease,
 }: DocumentTableProps) {
   const renderActions = (doc: FormularDocument) => {
@@ -95,19 +92,19 @@ export function DocumentTable({
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onRelease(doc)}>
-                  <CheckCircle className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Freigeben</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
                 <Button variant="ghost" size="icon" onClick={() => onDownload(doc)}>
                   <Download className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Herunterladen</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={() => onRelease(doc)}>
+                  <CheckCircle className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Freigeben</TooltipContent>
             </Tooltip>
           </div>
         );
