@@ -18,20 +18,18 @@ export default function FormularePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<FormularType | "all">("all");
   const [statusFilter, setStatusFilter] = useState<FormularStatus | "all">("all");
-  const [showReleased, setShowReleased] = useState(true);
 
   // Sort
   const [sortField, setSortField] = useState<SortField>("lastModified");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [currentPage, setCurrentPage] = useState(1);
 
-  const hasActiveFilters = searchQuery !== "" || typeFilter !== "all" || statusFilter !== "all" || showReleased;
+  const hasActiveFilters = searchQuery !== "" || typeFilter !== "all" || statusFilter !== "all";
 
   const resetFilters = () => {
     setSearchQuery("");
     setTypeFilter("all");
     setStatusFilter("all");
-    setShowReleased(false);
     setCurrentPage(1);
   };
 
@@ -46,11 +44,6 @@ export default function FormularePage() {
 
   const filteredDocuments = useMemo(() => {
     let docs = [...documents];
-
-    // Hide released by default
-    if (!showReleased && statusFilter !== "released") {
-      docs = docs.filter((d) => d.status !== "released");
-    }
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
@@ -84,7 +77,7 @@ export default function FormularePage() {
     });
 
     return docs;
-  }, [documents, searchQuery, typeFilter, statusFilter, showReleased, sortField, sortDirection]);
+  }, [documents, searchQuery, typeFilter, statusFilter, sortField, sortDirection]);
 
   const totalPages = Math.max(1, Math.ceil(filteredDocuments.length / PAGE_SIZE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
@@ -131,8 +124,6 @@ export default function FormularePage() {
           onTypeFilterChange={setTypeFilter}
           statusFilter={statusFilter}
           onStatusFilterChange={setStatusFilter}
-          showReleased={showReleased}
-          onShowReleasedChange={setShowReleased}
           hasActiveFilters={hasActiveFilters}
           onResetFilters={resetFilters}
         />

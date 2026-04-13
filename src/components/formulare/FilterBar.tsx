@@ -1,4 +1,4 @@
-import { Search, X } from "lucide-react";
+import { Search, X, FileCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import type { FormularStatus, FormularType } from "@/data/formular-types";
 
 interface FilterBarProps {
@@ -18,8 +17,6 @@ interface FilterBarProps {
   onTypeFilterChange: (value: FormularType | "all") => void;
   statusFilter: FormularStatus | "all";
   onStatusFilterChange: (value: FormularStatus | "all") => void;
-  showReleased: boolean;
-  onShowReleasedChange: (value: boolean) => void;
   hasActiveFilters: boolean;
   onResetFilters: () => void;
 }
@@ -31,11 +28,11 @@ export function FilterBar({
   onTypeFilterChange,
   statusFilter,
   onStatusFilterChange,
-  showReleased,
-  onShowReleasedChange,
   hasActiveFilters,
   onResetFilters,
 }: FilterBarProps) {
+  const isPreparedActive = statusFilter === "prepared";
+
   return (
     <div className="flex items-center gap-3 border-b border-border bg-surface-muted px-4 py-3">
       {/* Search */}
@@ -74,18 +71,16 @@ export function FilterBar({
         </SelectContent>
       </Select>
 
-      {/* Show released toggle */}
-      <div className="flex items-center gap-2 ml-2">
-        <Checkbox
-          id="show-released"
-          checked={showReleased}
-          onCheckedChange={(checked) => onShowReleasedChange(checked === true)}
-          className="rounded-sm"
-        />
-        <label htmlFor="show-released" className="text-sm text-muted-foreground cursor-pointer select-none">
-          Freigegebene anzeigen
-        </label>
-      </div>
+      {/* Quick filter: Vorbereitet */}
+      <Button
+        variant={isPreparedActive ? "default" : "outline"}
+        size="sm"
+        className="h-9 rounded-sm text-sm gap-1.5"
+        onClick={() => onStatusFilterChange(isPreparedActive ? "all" : "prepared")}
+      >
+        <FileCheck className="h-3.5 w-3.5" />
+        Vorbereitet
+      </Button>
 
       {/* Reset */}
       {hasActiveFilters && (

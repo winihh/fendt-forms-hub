@@ -71,7 +71,7 @@ export function DocumentTable({
           <div className="flex items-center justify-end gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onEdit(doc)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(doc)}>
                   <Pencil className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -84,7 +84,7 @@ export function DocumentTable({
           <div className="flex items-center justify-end gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onView(doc)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onView(doc)}>
                   <Eye className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -92,7 +92,7 @@ export function DocumentTable({
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onDownload(doc)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDownload(doc)}>
                   <Download className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -100,7 +100,7 @@ export function DocumentTable({
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onRelease(doc)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onRelease(doc)}>
                   <CheckCircle className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -113,7 +113,7 @@ export function DocumentTable({
           <div className="flex items-center justify-end gap-1">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onView(doc)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onView(doc)}>
                   <Eye className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -121,7 +121,7 @@ export function DocumentTable({
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={() => onDownload(doc)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDownload(doc)}>
                   <Download className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
@@ -134,7 +134,7 @@ export function DocumentTable({
 
   return (
     <div className="border border-border rounded-sm overflow-hidden">
-      <table className="w-full border-collapse">
+      <table className="w-full border-collapse table-fixed">
         <thead>
           <tr className="bg-surface-muted">
             {[
