@@ -52,7 +52,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   const [vinValidated, setVinValidated] = useState(false);
   const [vinError, setVinError] = useState<string | null>(null);
   const [existingDocId, setExistingDocId] = useState<string | null>(null);
-  const [inspectionNr, setInspectionNr] = useState(1);
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [street, setStreet] = useState("");
@@ -75,7 +75,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setVinValidated(false);
     setVinError(null);
     setExistingDocId(null);
-    setInspectionNr(1);
+    
     setFirstName("");
     setLastName("");
     setStreet("");
@@ -117,16 +117,6 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
       }
     }
 
-    // For inspection, find existing inspections and auto-increment
-    if (formType === "inspection") {
-      const existingInspections = MOCK_DOCUMENTS.filter(
-        (doc) => doc.type === "inspection" && doc.vin === vin
-      );
-      if (existingInspections.length > 0) {
-        const maxNr = Math.max(...existingInspections.map((d) => d.inspectionNr ?? 0));
-        setInspectionNr(maxNr + 1);
-      }
-    }
 
     // Simulate vehicle lookup – find matching doc or use fallback
     const matchingDoc = MOCK_DOCUMENTS.find((doc) => doc.vin === vin);
@@ -144,34 +134,15 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     }
   };
 
-  // Check for inspection number conflicts
-  const inspectionConflict = useMemo(() => {
-    if (formType !== "inspection" || !vinValidated || !vin) return null;
-    const existing = MOCK_DOCUMENTS.find(
-      (doc) => doc.type === "inspection" && doc.vin === vin && doc.inspectionNr === inspectionNr
-    );
-    if (!existing) return null;
-    if (existing.status === "released") return "released";
-    return "overwrite"; // prepared or signed
-  }, [formType, vin, vinValidated, inspectionNr]);
-
-  // Check if inspection number skips a sequence
-  const inspectionGapWarning = useMemo(() => {
-    if (formType !== "inspection" || !vinValidated || !vin) return null;
+  // Auto-calculate next inspection number (read-only)
+  const nextInspectionNr = useMemo(() => {
+    if (formType !== "inspection" || !vinValidated || !vin) return 1;
     const existingInspections = MOCK_DOCUMENTS.filter(
       (doc) => doc.type === "inspection" && doc.vin === vin
     );
-    if (existingInspections.length === 0 && inspectionNr > 1) {
-      return `Es gibt noch keine Inspektion für dieses Fahrzeug. Wollen Sie mit Nr. ${inspectionNr} statt Nr. 1 beginnen?`;
-    }
-    if (existingInspections.length > 0) {
-      const maxNr = Math.max(...existingInspections.map((d) => d.inspectionNr ?? 0));
-      if (inspectionNr > maxNr + 1) {
-        return `Die letzte Inspektion war Nr. ${maxNr}. Wollen Sie eine Inspektion auslassen?`;
-      }
-    }
-    return null;
-  }, [formType, vin, vinValidated, inspectionNr]);
+    if (existingInspections.length === 0) return 1;
+    return Math.max(...existingInspections.map((d) => d.inspectionNr ?? 0)) + 1;
+  }, [formType, vin, vinValidated]);
 
   const handleCreate = () => {
     onCreated();
@@ -320,13 +291,13 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 </div>
               )}
 
-              {vinValidated && !existingDocId && formType === "inspection" && inspectionNr > 1 && (
+              {vinValidated && !existingDocId && formType === "inspection" && nextInspectionNr > 1 && (
                 <div className="bg-status-signed-bg rounded-sm p-4 mt-3">
                   <p className="text-xs font-semibold text-status-signed-text mb-2">
                     Bisherige Inspektionen
                   </p>
                   <div className="space-y-1">
-                    {Array.from({ length: inspectionNr - 1 }, (_, i) => (
+                    {Array.from({ length: nextInspectionNr - 1 }, (_, i) => (
                       <div key={i} className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>Inspektion Nr. {i + 1}</span>
                         <span>{2024 + i}.04.15</span>
@@ -391,9 +362,24 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                     <Input value={city} onChange={(e) => setCity(e.target.value)} className="h-9 rounded-sm text-sm" />
                   </div>
                 </div>
-                <div className="space-y-1 max-w-[200px]">
+                <div className="space-y-1 max-w-[250px]">
                   <Label className="text-xs text-muted-foreground">Land *</Label>
-                  <Input value={country} onChange={(e) => setCountry(e.target.value)} className="h-9 rounded-sm text-sm" />
+                  <Select value={country} onValueChange={setCountry}>
+                    <SelectTrigger className="h-9 rounded-sm text-sm">
+                      <SelectValue placeholder="Land wählen" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[
+                        "Deutschland", "Österreich", "Schweiz", "Frankreich", "Italien",
+                        "Niederlande", "Belgien", "Luxemburg", "Dänemark", "Polen",
+                        "Tschechien", "Spanien", "Portugal", "Schweden", "Norwegen",
+                        "Finnland", "Großbritannien", "Irland", "Ungarn", "Kroatien",
+                        "Slowenien", "Slowakei", "Rumänien", "Bulgarien", "Griechenland",
+                      ].map((c) => (
+                        <SelectItem key={c} value={c}>{c}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -435,55 +421,10 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 <div className="space-y-3">
                   <div className="border-t border-border" />
                   <div className="flex items-center gap-4">
-                    <Label className="text-sm font-semibold whitespace-nowrap">Inspektions-Nr. *</Label>
-                    <Input
-                      type="number"
-                      min={1}
-                      max={99}
-                      value={inspectionNr}
-                      onChange={(e) => setInspectionNr(Number(e.target.value))}
-                      className="w-16 h-9 rounded-sm text-sm text-center tabular-nums"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Inspection number conflict warning */}
-              {formType === "inspection" && inspectionConflict === "overwrite" && (
-                <div className="rounded-sm p-4" style={{ backgroundColor: "hsl(45 93% 94%)", borderColor: "hsl(45 93% 47% / 0.3)", borderWidth: 1, borderStyle: "solid" }}>
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" style={{ color: "hsl(45 93% 37%)" }} />
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">
-                        Achtung, Dichtheitsprüfung Nr. {inspectionNr} schon vorhanden
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Die bestehende Prüfung wird beim Speichern überschrieben.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {formType === "inspection" && inspectionConflict === "released" && (
-                <div className="bg-destructive/10 border border-destructive/30 rounded-sm p-4">
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-semibold text-destructive">
-                        Dichtheitsprüfung Nr. {inspectionNr} schon vorhanden und freigegeben
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Eine freigegebene Prüfung kann nicht überschrieben werden. Bitte wählen Sie eine andere Inspektions-Nr.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {formType === "inspection" && inspectionGapWarning && !inspectionConflict && (
-                <div className="rounded-sm p-4" style={{ backgroundColor: "hsl(45 93% 94%)", borderColor: "hsl(45 93% 47% / 0.3)", borderWidth: 1, borderStyle: "solid" }}>
-                  <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 shrink-0 mt-0.5" style={{ color: "hsl(45 93% 37%)" }} />
-                    <p className="text-sm text-foreground">{inspectionGapWarning}</p>
+                    <Label className="text-sm font-semibold whitespace-nowrap">Inspektions-Nr.</Label>
+                    <span className="w-16 h-9 rounded-sm text-sm text-center tabular-nums flex items-center justify-center bg-muted border border-border font-medium">
+                      {nextInspectionNr}
+                    </span>
                   </div>
                 </div>
               )}
@@ -573,7 +514,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   {formType === "inspection" && (
                     <>
                       <span className="text-muted-foreground">Inspektions-Nr.</span>
-                      <span>{inspectionNr}</span>
+                      <span>{nextInspectionNr}</span>
                       <span className="text-muted-foreground">Ergebnis</span>
                       <span>{inspectionResult === "ok" ? "Fahrzeug in Ordnung" : "Abweichungen festgestellt"}</span>
                       {inspectionResult === "deviation" && (
@@ -630,7 +571,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
               <Button
                 size="default"
                 onClick={handleCreate}
-                disabled={inspectionConflict === "released"}
+                disabled={false}
               >
                 Formular speichern
               </Button>
@@ -638,7 +579,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 variant="outline"
                 size="default"
                 onClick={handleCreate}
-                disabled={inspectionConflict === "released"}
+                disabled={false}
               >
                 Speichern & Signieren
               </Button>
