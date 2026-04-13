@@ -524,7 +524,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                   {formType === "inspection" && (
                     <>
                       <span className="text-muted-foreground">Inspektions-Nr.</span>
-                      <span>{inspectionNr}</span>
+                      <span>{nextInspectionNr}</span>
                       <span className="text-muted-foreground">Ergebnis</span>
                       <span>{inspectionResult === "ok" ? "Fahrzeug in Ordnung" : "Abweichungen festgestellt"}</span>
                       {inspectionResult === "deviation" && (
@@ -581,7 +581,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
               <Button
                 size="default"
                 onClick={handleCreate}
-                disabled={inspectionConflict === "released"}
+                disabled={false}
               >
                 Formular speichern
               </Button>
@@ -589,7 +589,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 variant="outline"
                 size="default"
                 onClick={handleCreate}
-                disabled={inspectionConflict === "released"}
+                disabled={false}
               >
                 Speichern & Signieren
               </Button>
