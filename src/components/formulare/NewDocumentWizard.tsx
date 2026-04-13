@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
+import { AlertTriangle, CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
 import { MOCK_DOCUMENTS, type FormularType } from "@/data/formular-types";
 
 type FormLanguage = "de" | "en" | "fr" | "it" | "nl";
@@ -75,7 +75,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
     setVinValidated(false);
     setVinError(null);
     setExistingDocId(null);
-    setInspectionNr(1);
+    
     setFirstName("");
     setLastName("");
     setStreet("");
@@ -117,16 +117,6 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
       }
     }
 
-    // For inspection, find existing inspections and auto-increment
-    if (formType === "inspection") {
-      const existingInspections = MOCK_DOCUMENTS.filter(
-        (doc) => doc.type === "inspection" && doc.vin === vin
-      );
-      if (existingInspections.length > 0) {
-        const maxNr = Math.max(...existingInspections.map((d) => d.inspectionNr ?? 0));
-        setInspectionNr(maxNr + 1);
-      }
-    }
 
     // Simulate vehicle lookup – find matching doc or use fallback
     const matchingDoc = MOCK_DOCUMENTS.find((doc) => doc.vin === vin);
@@ -301,13 +291,13 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
                 </div>
               )}
 
-              {vinValidated && !existingDocId && formType === "inspection" && inspectionNr > 1 && (
+              {vinValidated && !existingDocId && formType === "inspection" && nextInspectionNr > 1 && (
                 <div className="bg-status-signed-bg rounded-sm p-4 mt-3">
                   <p className="text-xs font-semibold text-status-signed-text mb-2">
                     Bisherige Inspektionen
                   </p>
                   <div className="space-y-1">
-                    {Array.from({ length: inspectionNr - 1 }, (_, i) => (
+                    {Array.from({ length: nextInspectionNr - 1 }, (_, i) => (
                       <div key={i} className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>Inspektion Nr. {i + 1}</span>
                         <span>{2024 + i}.04.15</span>
