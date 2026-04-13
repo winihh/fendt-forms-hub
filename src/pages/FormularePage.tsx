@@ -77,7 +77,7 @@ export default function FormularePage() {
     });
 
     return docs;
-  }, [documents, searchQuery, typeFilter, statusFilter, showReleased, sortField, sortDirection]);
+  }, [documents, searchQuery, typeFilter, statusFilter, sortField, sortDirection]);
 
   const totalPages = Math.max(1, Math.ceil(filteredDocuments.length / PAGE_SIZE));
   const safeCurrentPage = Math.min(currentPage, totalPages);
