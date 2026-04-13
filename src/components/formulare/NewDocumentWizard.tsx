@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AlertTriangle, CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
+import { CheckCircle, FileText, ArrowRight, ArrowLeft } from "lucide-react";
 import { MOCK_DOCUMENTS, type FormularType } from "@/data/formular-types";
 
 type FormLanguage = "de" | "en" | "fr" | "it" | "nl";
@@ -52,7 +52,7 @@ export function NewDocumentWizard({ open, onOpenChange, onCreated }: NewDocument
   const [vinValidated, setVinValidated] = useState(false);
   const [vinError, setVinError] = useState<string | null>(null);
   const [existingDocId, setExistingDocId] = useState<string | null>(null);
-  const [inspectionNr, setInspectionNr] = useState(1);
+  
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [street, setStreet] = useState("");
