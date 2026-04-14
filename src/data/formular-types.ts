@@ -71,7 +71,7 @@ function generateDocuments(): FormularDocument[] {
   // Start date: 2026-03-17, go backwards
   const startDate = new Date("2026-03-17");
 
-  for (let i = 0; i < 75; i++) {
+  for (let i = 0; i < 150; i++) {
     const type = types[i % 2];
     const status = statuses[i % 3];
     const date = new Date(startDate);
