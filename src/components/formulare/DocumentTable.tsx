@@ -5,6 +5,7 @@ import {
   Eye,
   Download,
   CheckCircle,
+  Trash2,
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
@@ -47,6 +48,7 @@ interface DocumentTableProps {
   onView: (doc: FormularDocument) => void;
   onDownload: (doc: FormularDocument) => void;
   onRelease: (doc: FormularDocument) => void;
+  onDelete: (doc: FormularDocument) => void;
 }
 
 function SortIcon({ field, currentField, direction }: { field: SortField; currentField: SortField; direction: SortDirection }) {
@@ -63,6 +65,7 @@ export function DocumentTable({
   onView,
   onDownload,
   onRelease,
+  onDelete,
 }: DocumentTableProps) {
   const renderActions = (doc: FormularDocument) => {
     switch (doc.status) {
@@ -76,6 +79,14 @@ export function DocumentTable({
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Bearbeiten</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => onDelete(doc)}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Löschen</TooltipContent>
             </Tooltip>
           </div>
         );
