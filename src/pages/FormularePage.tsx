@@ -5,6 +5,7 @@ import { FilterBar } from "@/components/formulare/FilterBar";
 import { DocumentTable, type SortField, type SortDirection } from "@/components/formulare/DocumentTable";
 import { DocumentPagination } from "@/components/formulare/DocumentPagination";
 import { NewDocumentWizard } from "@/components/formulare/NewDocumentWizard";
+import { DeleteConfirmDialog } from "@/components/formulare/DeleteConfirmDialog";
 import { MOCK_DOCUMENTS, type FormularDocument, type FormularStatus, type FormularType } from "@/data/formular-types";
 import { toast } from "sonner";
 
@@ -13,6 +14,7 @@ const PAGE_SIZE = 20;
 export default function FormularePage() {
   const [documents, setDocuments] = useState<FormularDocument[]>(MOCK_DOCUMENTS);
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [deleteDoc, setDeleteDoc] = useState<FormularDocument | null>(null);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
@@ -152,6 +154,7 @@ export default function FormularePage() {
             onView={(doc) => handleAction("Ansehen", doc)}
             onDownload={(doc) => handleAction("Herunterladen", doc)}
             onRelease={(doc) => handleAction("Freigeben", doc)}
+            onDelete={(doc) => setDeleteDoc(doc)}
           />
 
           {/* Bottom pagination */}
@@ -173,6 +176,17 @@ export default function FormularePage() {
         onCreated={() => {
           toast.success("Dokument erfolgreich erzeugt. Übergabe an Signotec…");
         }}
+      />
+      <DeleteConfirmDialog
+        document={deleteDoc}
+        onConfirm={() => {
+          if (deleteDoc) {
+            setDocuments((prev) => prev.filter((d) => d.id !== deleteDoc.id));
+            toast.success(`Dokument ${deleteDoc.id} wurde gelöscht.`);
+            setDeleteDoc(null);
+          }
+        }}
+        onCancel={() => setDeleteDoc(null)}
       />
     </div>
   );
