@@ -82,7 +82,7 @@ export function DocumentTable({
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" onClick={() => onDelete(doc)}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onDelete(doc)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
